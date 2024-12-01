@@ -54,7 +54,7 @@ jobs:
         with:
           context: pkg/synology/dsm7-docker
           push: ${{ github.event_name != 'pull_request' }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           build-args: ZTO_COMMIT=${{ github.event.inputs.tagged_version }},ZTO_VER=${{ github.event.inputs.tagged_version }}
           provenance: false
           tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.tagged_version }}"

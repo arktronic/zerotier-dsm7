@@ -1,0 +1,62 @@
+name: Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagged_version:
+        description: ZT ref
+        default: '0.0.1'
+        required: true
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'zerotier/ZeroTierOne'
+          ref: ${{ github.event.inputs.tagged_version }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: pkg/synology/dsm7-docker
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          build-args: ZTO_COMMIT=${{ github.event.inputs.tagged_version }},ZTO_VER=${{ github.event.inputs.tagged_version }}
+          provenance: false
+          tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.tagged_version }}"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

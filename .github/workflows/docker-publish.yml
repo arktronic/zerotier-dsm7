@@ -53,7 +53,9 @@ jobs:
           context: pkg/synology/dsm7-docker
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64
-          build-args: ZTO_COMMIT=${{ github.event.inputs.tagged_version }},ZTO_VER=${{ github.event.inputs.tagged_version }}
+          build-args: |
+            ZTO_COMMIT=${{ github.event.inputs.tagged_version }}
+            ZTO_VER=${{ github.event.inputs.tagged_version }}
           provenance: false
           tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.tagged_version }}-amd64"
           cache-from: type=gha
@@ -67,7 +69,9 @@ jobs:
           context: pkg/synology/dsm7-docker
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/arm/v7
-          build-args: ZTO_COMMIT=${{ github.event.inputs.tagged_version }},ZTO_VER=${{ github.event.inputs.tagged_version }}
+          build-args: |
+            ZTO_COMMIT=${{ github.event.inputs.tagged_version }}
+            ZTO_VER=${{ github.event.inputs.tagged_version }}
           provenance: false
           tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.tagged_version }}-armv7"
           cache-from: type=gha
@@ -81,7 +85,9 @@ jobs:
           context: pkg/synology/dsm7-docker
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/arm64/v8
-          build-args: ZTO_COMMIT=${{ github.event.inputs.tagged_version }},ZTO_VER=${{ github.event.inputs.tagged_version }}
+          build-args: |
+            ZTO_COMMIT=${{ github.event.inputs.tagged_version }}
+            ZTO_VER=${{ github.event.inputs.tagged_version }}
           provenance: false
           tags: "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.tagged_version }}-arm64v8"
           cache-from: type=gha

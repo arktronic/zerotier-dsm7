@@ -7,6 +7,10 @@ on:
         description: ZT ref
         required: true
 
+defaults:
+  run:
+    shell: bash
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
@@ -17,7 +21,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: read
       packages: write
